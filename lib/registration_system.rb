@@ -30,7 +30,8 @@ class RegistrationSystem
 
     {
       success: cancelation_result[:success] && registration_result[:success],
-      status: :confirmed
+      status: :confirmed,
+      price: registration_result[:price]
     }
   end
 

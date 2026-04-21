@@ -86,7 +86,7 @@ class ExtractAndSimplifyTest < Minitest::Test
   end
 
   def test_transfer_calculates_price_for_new_event
-    skip "transfer_registration uses calculate_price for the new event"
+    # skip "transfer_registration uses calculate_price for the new event"
 
     @system.register("Alice", "alice@example.com", "Workshop A")
     from_event = @system.events["Workshop A"]
