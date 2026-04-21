@@ -20,6 +20,27 @@ class RegistrationSystem
       waitlist: []
     }
   end
+  def calculate_price(event)
+    # Calculate price
+    case event[:event_type]
+    when :service
+      event[:price]
+    when :workshop
+      if event[:early_bird_price] && event[:registered].size <= (event[:capacity] / 2)
+        event[:early_bird_price]
+      else
+        event[:price]
+      end
+    when :retreat
+      if event[:early_bird_price] && event[:registered].size <= (event[:capacity] / 3)
+        event[:early_bird_price]
+      else
+        event[:price]
+      end
+    else
+      event[:price]
+    end
+  end
 
   def register(attendee_name, attendee_email, event_name, phone = nil)
     event = @events[event_name]
@@ -36,24 +57,7 @@ class RegistrationSystem
       event[:registered] << attendee
 
       # Calculate price
-      final_price = case event[:event_type]
-      when :service
-        event[:price]
-      when :workshop
-        if event[:early_bird_price] && event[:registered].size <= (event[:capacity] / 2)
-          event[:early_bird_price]
-        else
-          event[:price]
-        end
-      when :retreat
-        if event[:early_bird_price] && event[:registered].size <= (event[:capacity] / 3)
-          event[:early_bird_price]
-        else
-          event[:price]
-        end
-      else
-        event[:price]
-      end
+      final_price = calculate_price(event)
 
       # Send notifications
       case event[:event_type]
