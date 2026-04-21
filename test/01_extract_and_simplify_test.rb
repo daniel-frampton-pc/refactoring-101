@@ -69,7 +69,7 @@ class ExtractAndSimplifyTest < Minitest::Test
   end
 
   def test_transfer_promotes_from_waitlist_on_old_event
-    skip "transfer_registration promotes the next waitlisted person on the old event"
+    # skip "transfer_registration promotes the next waitlisted person on the old event"
 
     @system.register("Alice", "alice@example.com", "Workshop A")
     @system.register("Bob", "bob@example.com", "Workshop A")
