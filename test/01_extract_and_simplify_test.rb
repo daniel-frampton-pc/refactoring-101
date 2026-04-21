@@ -52,7 +52,7 @@ class ExtractAndSimplifyTest < Minitest::Test
   end
 
   def test_transfer_sends_cancellation_and_registration_notifications
-    skip "transfer_registration sends cancellation and registration notifications"
+    # skip "transfer_registration sends cancellation and registration notifications"
 
     @system.register("Alice", "alice@example.com", "Workshop A", "555-0101")
     from_event = @system.events["Workshop A"]
