@@ -36,7 +36,7 @@ class ExtractAndSimplifyTest < Minitest::Test
   end
 
   def test_transfer_moves_attendee_to_new_event
-    skip "Compose extracted methods into transfer_registration(attendee, from_event, to_event)"
+    # skip "Compose extracted methods into transfer_registration(attendee, from_event, to_event)"
 
     @system.register("Alice", "alice@example.com", "Workshop A", "555-0101")
     from_event = @system.events["Workshop A"]

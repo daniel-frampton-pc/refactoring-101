@@ -20,6 +20,20 @@ class RegistrationSystem
       waitlist: []
     }
   end
+
+  def transfer_registration(attendee, from_event, to_event)
+    # remove the attendee from the from_event
+    # from_event.registered.
+
+    cancelation_result = cancel_registration(attendee, from_event)
+    registration_result = register(attendee[:name], attendee[:email], to_event[:name], attendee[:phone])
+
+    {
+      success: cancelation_result[:success] && registration_result[:success],
+      status: :confirmed
+    }
+  end
+
   def calculate_price(event)
     # Calculate price
     case event[:event_type]
