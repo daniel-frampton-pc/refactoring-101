@@ -1,13 +1,14 @@
 {
   "$schema": "https://raw.githubusercontent.com/jetify-com/devbox/0.16.0/.schema/devbox.schema.json",
-  "packages": [
-    "ruby@3.3",
-    "libyaml"
-  ],
+  "packages": {
+    "ruby_3_3": "latest",
+    "libyaml": {
+      "version": "latest",
+      "outputs": ["out", "dev"]
+    }
+  },
   "shell": {
-    "init_hook": [
-      "bundle install --quiet"
-    ],
+    "init_hook": ["bundle install --quiet"],
     "scripts": {
       "test": "bundle exec rake",
       "watch": "rerun -bcx --no-notify -- bundle exec rake"
