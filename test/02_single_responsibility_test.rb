@@ -44,7 +44,7 @@ require_relative "test_helper"
 
 class SingleResponsibilityTest < Minitest::Test
   def test_capacity_report_almost_full
-    skip "Add capacity_report -- extract classes first so it has an obvious home"
+    # skip "Add capacity_report -- extract classes first so it has an obvious home"
 
     system = RegistrationSystem.new
     system.create_event("Workshop", :workshop, 10, 50)

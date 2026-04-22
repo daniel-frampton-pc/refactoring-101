@@ -35,6 +35,19 @@ class RegistrationSystem
     }
   end
 
+  def capacity_report(event_name)
+    event = @events[event_name]
+
+    decimal_full = event[:registered].size.to_f / event[:capacity].to_f
+    percent_full = decimal_full * 100
+
+    {
+      event_name: event[:name],
+      percent_full:,
+      status: :almost_full
+    }
+  end
+
   def calculate_price(event)
     # Calculate price
     case event[:event_type]
