@@ -19,15 +19,10 @@ class Notifier
   end
 
   def send_waitlist_notifications(event, attendee)
-    case event[:event_type]
-    when :service
-      notifications_sent << "EMAIL: #{attendee[:email]} - You're on the waitlist for #{event[:name]}"
-    when :workshop
-      notifications_sent << "EMAIL: #{attendee[:email]} - You're on the waitlist for #{event[:name]}"
-      notifications_sent << "SMS: #{attendee[:phone]} - Waitlisted for #{event[:name]}" if attendee[:phone]
-    when :retreat
-      notifications_sent << "EMAIL: #{attendee[:email]} - You're on the waitlist for #{event[:name]}"
-      notifications_sent << "SMS: #{attendee[:phone]} - Waitlisted for #{event[:name]}" if attendee[:phone]
+    notifications_sent << build_message(:email, attendee[:email], "You're on the waitlist for #{event[:name]}")
+
+    if event[:event_type] != :service && attendee[:phone]
+      notifications_sent << build_message(:sms, attendee[:phone], "Waitlisted for #{event[:name]}")
     end
   end
 
@@ -52,5 +47,11 @@ class Notifier
 
   def send_remove_from_waitlist_notification(event, attendee)
     notifications_sent << "EMAIL: #{attendee[:email]} - Removed from waitlist for #{event[:name]}"
+  end
+
+  private
+
+  def build_message(format, recipient, content)
+     "#{format.to_s.upcase}: #{recipient} - #{content}"
   end
 end
