@@ -4,4 +4,53 @@ class Notifier
   def initialize
     @notifications_sent = []
   end
+
+  def send_registration_notifications(event, attendee, price)
+    case event[:event_type]
+    when :service
+        notifications_sent << "EMAIL: #{attendee[:email]} - Registration confirmed for #{event[:name]}. Amount: $#{price}"
+    when :workshop
+        notifications_sent << "EMAIL: #{attendee[:email]} - Registration confirmed for #{event[:name]}. Amount: $#{price}"
+        notifications_sent << "SMS: #{attendee[:phone]} - You're registered for #{event[:name]}!" if attendee[:phone]
+    when :retreat
+        notifications_sent << "EMAIL: #{attendee[:email]} - Registration confirmed for #{event[:name]}. Amount: $#{price}"
+        notifications_sent << "SMS: #{attendee[:phone]} - You're registered for #{event[:name]}!" if attendee[:phone]
+    end
+  end
+
+  def send_waitlist_notifications(event, attendee)
+    case event[:event_type]
+    when :service
+      notifications_sent << "EMAIL: #{attendee[:email]} - You're on the waitlist for #{event[:name]}"
+    when :workshop
+      notifications_sent << "EMAIL: #{attendee[:email]} - You're on the waitlist for #{event[:name]}"
+      notifications_sent << "SMS: #{attendee[:phone]} - Waitlisted for #{event[:name]}" if attendee[:phone]
+    when :retreat
+      notifications_sent << "EMAIL: #{attendee[:email]} - You're on the waitlist for #{event[:name]}"
+      notifications_sent << "SMS: #{attendee[:phone]} - Waitlisted for #{event[:name]}" if attendee[:phone]
+    end
+  end
+
+  def send_cancellation_notifications(event, attendee, registration)
+    case event[:event_type]
+    when :service
+      notifications_sent << "EMAIL: #{attendee[:email]} - Registration cancelled for #{event[:name]}"
+    when :workshop
+      notifications_sent << "EMAIL: #{attendee[:email]} - Registration cancelled for #{event[:name]}"
+      notifications_sent << "SMS: #{attendee[:phone]} - Cancelled: #{event[:name]}" if attendee[:phone]
+    when :retreat
+      refund_info = " Refund of $#{registration[:price]} will be processed within 5-7 business days."
+      notifications_sent << "EMAIL: #{attendee[:email]} - Registration cancelled for #{event[:name]}.#{refund_info}"
+      notifications_sent << "SMS: #{attendee[:phone]} - Cancelled: #{event[:name]}" if attendee[:phone]
+    end
+  end
+
+  def send_promote_from_waitlist_notification(event, attendee)
+    notifications_sent << "EMAIL: #{attendee[:email]} - You've been promoted from the waitlist for #{event[:name]}! Amount: $#{event[:price]}"
+    notifications_sent << "SMS: #{attendee[:phone]} - Promoted from waitlist: #{event[:name]}!" if attendee[:phone]
+  end
+
+  def send_remove_from_waitlist_notification(event, attendee)
+    notifications_sent << "EMAIL: #{attendee[:email]} - Removed from waitlist for #{event[:name]}"
+  end
 end

@@ -4,7 +4,7 @@ require_relative './price_calculator.rb'
 require './lib/notifier.rb'
 
 class RegistrationSystem
-  attr_reader :events, :registrations
+  attr_reader :events, :registrations, :notifier
 
   def initialize
     @events = {}
@@ -73,16 +73,7 @@ class RegistrationSystem
       final_price = PriceCalculator.new(event).calculate_price
 
       # Send notifications
-      case event[:event_type]
-      when :service
-        notifications_sent << "EMAIL: #{attendee[:email]} - Registration confirmed for #{event[:name]}. Amount: $#{final_price}"
-      when :workshop
-        notifications_sent << "EMAIL: #{attendee[:email]} - Registration confirmed for #{event[:name]}. Amount: $#{final_price}"
-        notifications_sent << "SMS: #{attendee[:phone]} - You're registered for #{event[:name]}!" if attendee[:phone]
-      when :retreat
-        notifications_sent << "EMAIL: #{attendee[:email]} - Registration confirmed for #{event[:name]}. Amount: $#{final_price}"
-        notifications_sent << "SMS: #{attendee[:phone]} - You're registered for #{event[:name]}!" if attendee[:phone]
-      end
+      notifier.send_registration_notifications(event, attendee, final_price)
 
       @registrations[attendee_email] ||= []
       @registrations[attendee_email] << { event_name: event[:name], price: final_price, status: :confirmed }
@@ -91,17 +82,7 @@ class RegistrationSystem
     else
       event[:waitlist] << attendee
 
-      # Send waitlist notifications
-      case event[:event_type]
-      when :service
-        notifications_sent << "EMAIL: #{attendee[:email]} - You're on the waitlist for #{event[:name]}"
-      when :workshop
-        notifications_sent << "EMAIL: #{attendee[:email]} - You're on the waitlist for #{event[:name]}"
-        notifications_sent << "SMS: #{attendee[:phone]} - Waitlisted for #{event[:name]}" if attendee[:phone]
-      when :retreat
-        notifications_sent << "EMAIL: #{attendee[:email]} - You're on the waitlist for #{event[:name]}"
-        notifications_sent << "SMS: #{attendee[:phone]} - Waitlisted for #{event[:name]}" if attendee[:phone]
-      end
+      notifier.send_waitlist_notifications(event, attendee)
 
       @registrations[attendee[:email]] ||= []
       @registrations[attendee[:email]] << { event_name: event[:name], price: 0, status: :waitlisted }
@@ -121,18 +102,7 @@ class RegistrationSystem
       registration = @registrations[attendee[:email]]&.find { |r| r[:event_name] == event[:name] }
       registration[:status] = :cancelled if registration
 
-      # Send cancellation notifications
-      case event[:event_type]
-      when :service
-        notifications_sent << "EMAIL: #{attendee[:email]} - Registration cancelled for #{event[:name]}"
-      when :workshop
-        notifications_sent << "EMAIL: #{attendee[:email]} - Registration cancelled for #{event[:name]}"
-        notifications_sent << "SMS: #{attendee[:phone]} - Cancelled: #{event[:name]}" if attendee[:phone]
-      when :retreat
-        refund_info = " Refund of $#{registration[:price]} will be processed within 5-7 business days."
-        notifications_sent << "EMAIL: #{attendee[:email]} - Registration cancelled for #{event[:name]}.#{refund_info}"
-        notifications_sent << "SMS: #{attendee[:phone]} - Cancelled: #{event[:name]}" if attendee[:phone]
-      end
+      notifier.send_cancellation_notifications(event, attendee, registration)
 
       # Promote from waitlist
       if event[:waitlist].any?
@@ -143,8 +113,7 @@ class RegistrationSystem
           preg[:status] = :confirmed
           preg[:price] = event[:price]
         end
-        notifications_sent << "EMAIL: #{promoted[:email]} - You've been promoted from the waitlist for #{event[:name]}! Amount: $#{event[:price]}"
-        notifications_sent << "SMS: #{promoted[:phone]} - Promoted from waitlist: #{event[:name]}!" if promoted[:phone]
+        notifier.send_promote_from_waitlist_notification(event, promoted)
       end
 
       { success: true, status: :cancelled, price: nil, error: nil }
@@ -152,7 +121,7 @@ class RegistrationSystem
       event[:waitlist].delete(waitlisted_person)
       registration = @registrations[attendee[:email]]&.find { |r| r[:event_name] == event[:name] }
       registration[:status] = :cancelled if registration
-      notifications_sent << "EMAIL: #{attendee[:email]} - Removed from waitlist for #{event[:name]}"
+      notifier.send_remove_from_waitlist_notification(event, attendee)
       { success: true, status: :cancelled, price: nil, error: nil }
     end
   end
