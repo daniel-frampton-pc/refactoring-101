@@ -2,14 +2,19 @@
 
 require_relative './price_calculator.rb'
 require './lib/notifier.rb'
+require_relative './report_generator.rb'
 
 class RegistrationSystem
   attr_reader :events, :registrations, :notifier
+  extend Forwardable
+
+  def_delegators :@report_generator, :capacity_report, :event_report, :attendee_report
 
   def initialize
     @events = {}
     @registrations = {}
     @notifier = Notifier.new
+    @report_generator = ReportGenerator.new(@events, @registrations)
   end
 
   def notifications_sent
@@ -39,19 +44,6 @@ class RegistrationSystem
       success: cancelation_result[:success] && registration_result[:success],
       status: :confirmed,
       price: registration_result[:price]
-    }
-  end
-
-  def capacity_report(event_name)
-    event = @events[event_name]
-
-    decimal_full = event[:registered].size.to_f / event[:capacity].to_f
-    percent_full = decimal_full * 100
-
-    {
-      event_name: event[:name],
-      percent_full:,
-      status: :almost_full
     }
   end
 
@@ -124,42 +116,5 @@ class RegistrationSystem
       notifier.send_remove_from_waitlist_notification(event, attendee)
       { success: true, status: :cancelled, price: nil, error: nil }
     end
-  end
-
-  def event_report(event_name)
-    event = @events[event_name]
-    return nil unless event
-
-    total_revenue =
-      @registrations
-        .values
-        .flatten
-        .select { |r| r[:event_name] == event_name && r[:status] == :confirmed }
-        .sum { |r| r[:price] }
-
-    {
-      event_name: event[:name],
-      event_type: event[:event_type],
-      capacity: event[:capacity],
-      registered_count: event[:registered].size,
-      waitlist_count: event[:waitlist].size,
-      available_spots: event[:capacity] - event[:registered].size,
-      total_revenue: total_revenue,
-      registrations: event[:registered].map { |r| { name: r[:name], email: r[:email], phone: r[:phone] } },
-      waitlist: event[:waitlist].map { |r| { name: r[:name], email: r[:email], phone: r[:phone] } }
-    }
-  end
-
-  def attendee_report(attendee_email)
-    regs = @registrations[attendee_email]
-    return nil unless regs
-
-    total_spent = regs.select { |r| r[:status] == :confirmed }.sum { |r| r[:price] }
-
-    {
-      email: attendee_email,
-      registrations: regs,
-      total_spent: total_spent
-    }
   end
 end

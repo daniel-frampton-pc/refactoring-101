@@ -60,7 +60,7 @@ class SingleResponsibilityTest < Minitest::Test
   end
 
   def test_capacity_report_available
-    skip "Add capacity_report -- extract classes first so it has an obvious home"
+    # skip "Add capacity_report -- extract classes first so it has an obvious home"
 
     system = RegistrationSystem.new
     system.create_event("Sunday Service", :service, 100, 0)
@@ -75,7 +75,7 @@ class SingleResponsibilityTest < Minitest::Test
   end
 
   def test_capacity_report_full
-    skip "Add capacity_report -- extract classes first so it has an obvious home"
+    # skip "Add capacity_report -- extract classes first so it has an obvious home"
 
     system = RegistrationSystem.new
     system.create_event("Tiny Event", :service, 2, 0)
@@ -90,7 +90,7 @@ class SingleResponsibilityTest < Minitest::Test
   end
 
   def test_capacity_report_delegates_through_system
-    skip "Add capacity_report -- extract classes first so it has an obvious home"
+    # skip "Add capacity_report -- extract classes first so it has an obvious home"
 
     system = RegistrationSystem.new
     system.create_event("Workshop", :workshop, 4, 50)
