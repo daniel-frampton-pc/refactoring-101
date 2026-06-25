@@ -39,6 +39,11 @@ require_relative "test_helper"
 #
 # =============================================================================
 
+# NOTE TO OURSELVES:
+# We left off at refactoring Notifier to use polymorphism.
+# Caroline has as an optimistic goal to finish refactoring Notifier.
+# Next time, we plan to pick up with creating ConferenceEvent.
+
 class OpenClosedTest < Minitest::Test
   def test_conference_registration_with_early_bird_pricing
     skip "Add :conference event type -- replace case/when with polymorphism first"
