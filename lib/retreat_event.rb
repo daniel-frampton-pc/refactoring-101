@@ -1,13 +1,15 @@
-class RetreatEvent
-  def initialize(event)
-    @event = event
+require_relative './event'
+
+class RetreatEvent < Event
+  def calculate_price
+    if early_bird_price && registered.size <= (capacity / 3)
+      early_bird_price
+    else
+      price
+    end
   end
 
-  def calculate_price
-    if @event[:early_bird_price] && @event[:registered].size <= (@event[:capacity] / 3)
-      @event[:early_bird_price]
-    else
-      @event[:price]
-    end
+  def registration_notification_formats
+    [ :email, :sms ]
   end
 end

@@ -1,9 +1,10 @@
-class ServiceEvent
-  def initialize(event)
-    @event = event
+require_relative './event'
+class ServiceEvent < Event
+  def calculate_price
+    price
   end
 
-  def calculate_price
-    @event[:price]
+  def registration_notification_formats
+    [ :email ]
   end
 end

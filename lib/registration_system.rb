@@ -76,7 +76,7 @@ class RegistrationSystem
       final_price = PriceCalculator.new(event_obj).calculate_price
 
       # Send notifications
-      notifier.send_registration_notifications(event, attendee, final_price)
+      notifier.send_registration_notifications(event_obj, attendee, final_price)
 
       @registrations[attendee_email] ||= []
       @registrations[attendee_email] << { event_name: event[:name], price: final_price, status: :confirmed }

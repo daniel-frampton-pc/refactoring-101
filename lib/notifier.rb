@@ -5,16 +5,17 @@ class Notifier
     @notifications_sent = []
   end
 
-  def send_registration_notifications(event, attendee, price)
-    case event[:event_type]
-    when :service
-        notifications_sent << "EMAIL: #{attendee[:email]} - Registration confirmed for #{event[:name]}. Amount: $#{price}"
-    when :workshop
-        notifications_sent << "EMAIL: #{attendee[:email]} - Registration confirmed for #{event[:name]}. Amount: $#{price}"
-        notifications_sent << "SMS: #{attendee[:phone]} - You're registered for #{event[:name]}!" if attendee[:phone]
-    when :retreat
-        notifications_sent << "EMAIL: #{attendee[:email]} - Registration confirmed for #{event[:name]}. Amount: $#{price}"
-        notifications_sent << "SMS: #{attendee[:phone]} - You're registered for #{event[:name]}!" if attendee[:phone]
+  def send_registration_notifications(event, attendee, final_price)
+    email_message = "Registration confirmed for #{event.name}. Amount: $#{final_price}"
+    sms_message = "You're registered for #{event.name}!"
+
+    event.registration_notification_formats.each do |format|
+      next if format == :sms && !attendee[:phone]
+
+      contact =format == :email ? attendee[:email] : attendee[:phone]
+      message = format == :sms ? sms_message : email_message
+
+      notifications_sent << "#{format.upcase}: #{contact} - #{message}"
     end
   end
 
