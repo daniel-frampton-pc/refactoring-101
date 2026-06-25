@@ -1,11 +1,9 @@
-class PriceCalculator
-  attr_reader :event
-
+class ServiceEvent
   def initialize(event)
     @event = event
   end
 
   def calculate_price
-    event.calculate_price
+    @event[:price]
   end
 end

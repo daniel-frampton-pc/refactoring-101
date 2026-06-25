@@ -3,7 +3,9 @@
 require_relative './price_calculator.rb'
 require './lib/notifier.rb'
 require_relative './report_generator.rb'
-
+require_relative './retreat_event'
+require_relative './workshop_event'
+require_relative './service_event'
 class RegistrationSystem
   attr_reader :events, :registrations, :notifier
   extend Forwardable
@@ -61,8 +63,17 @@ class RegistrationSystem
     if event[:registered].size < event[:capacity]
       event[:registered] << attendee
 
+      event_obj = case event[:event_type]
+      when :service
+        ServiceEvent.new(event)
+      when :workshop
+        WorkshopEvent.new(event)
+      when :retreat
+        RetreatEvent.new(event)
+      end
+
       # Calculate price
-      final_price = PriceCalculator.new(event).calculate_price
+      final_price = PriceCalculator.new(event_obj).calculate_price
 
       # Send notifications
       notifier.send_registration_notifications(event, attendee, final_price)
