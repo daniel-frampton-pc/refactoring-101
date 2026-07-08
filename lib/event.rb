@@ -9,4 +9,12 @@ class Event
     @registered = event[:registered]
     @type = event[:event_type]
   end
+
+  def promote_from_waitlist_notification_formats
+    [ :email, :sms ]
+  end
+
+  def remove_from_waitlist_notification_formats
+    [ :email ]
+  end
 end

@@ -51,12 +51,28 @@ class Notifier
   end
 
   def send_promote_from_waitlist_notification(event, attendee)
-    notifications_sent << "EMAIL: #{attendee[:email]} - You've been promoted from the waitlist for #{event[:name]}! Amount: $#{event[:price]}"
-    notifications_sent << "SMS: #{attendee[:phone]} - Promoted from waitlist: #{event[:name]}!" if attendee[:phone]
+    email_message = "You've been promoted from the waitlist for #{event.name}! Amount: $#{event.price}"
+    sms_message = "Promoted from waitlist: #{event.name}!"
+
+    event.promote_from_waitlist_notification_formats.each do |format|
+      next if format == :sms && !attendee[:phone]
+
+      contact = format == :email ? attendee[:email] : attendee[:phone]
+      message = format == :sms ? sms_message : email_message
+
+      notifications_sent << "#{format.upcase}: #{contact} - #{message}"
+    end
   end
 
   def send_remove_from_waitlist_notification(event, attendee)
-    notifications_sent << "EMAIL: #{attendee[:email]} - Removed from waitlist for #{event[:name]}"
+    email_message = "You've been removed from the waitlist for #{event.name}."
+
+    event.remove_from_waitlist_notification_formats.each do |format|
+      contact = attendee[:email]
+      message = email_message
+
+      notifications_sent << "#{format.upcase}: #{contact} - #{message}"
+    end
   end
 
   private

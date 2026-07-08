@@ -100,19 +100,19 @@ class RegistrationSystem
 
     return { success: false, status: nil, price: nil, error: "Registration not found" } unless registered_person || waitlisted_person
 
+    event_obj = case event[:event_type]
+    when :service
+      ServiceEvent.new(event)
+    when :workshop
+      WorkshopEvent.new(event)
+    when :retreat
+      RetreatEvent.new(event)
+    end
+
     if registered_person
       event[:registered].delete(registered_person)
       registration = @registrations[attendee[:email]]&.find { |r| r[:event_name] == event[:name] }
       registration[:status] = :cancelled if registration
-
-      event_obj = case event[:event_type]
-      when :service
-        ServiceEvent.new(event)
-      when :workshop
-        WorkshopEvent.new(event)
-      when :retreat
-        RetreatEvent.new(event)
-      end
 
       notifier.send_cancellation_notifications(event_obj, attendee, registration)
 
@@ -125,7 +125,7 @@ class RegistrationSystem
           preg[:status] = :confirmed
           preg[:price] = event[:price]
         end
-        notifier.send_promote_from_waitlist_notification(event, promoted)
+        notifier.send_promote_from_waitlist_notification(event_obj, promoted)
       end
 
       { success: true, status: :cancelled, price: nil, error: nil }
@@ -133,7 +133,7 @@ class RegistrationSystem
       event[:waitlist].delete(waitlisted_person)
       registration = @registrations[attendee[:email]]&.find { |r| r[:event_name] == event[:name] }
       registration[:status] = :cancelled if registration
-      notifier.send_remove_from_waitlist_notification(event, attendee)
+      notifier.send_remove_from_waitlist_notification(event_obj, attendee)
       { success: true, status: :cancelled, price: nil, error: nil }
     end
   end
