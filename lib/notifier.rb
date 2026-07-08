@@ -1,6 +1,8 @@
 class Notifier
   attr_accessor :notifications_sent
 
+  RETREAT_EVENT_TYPE = :retreat
+
   def initialize
     @notifications_sent = []
   end
@@ -34,16 +36,17 @@ class Notifier
   end
 
   def send_cancellation_notifications(event, attendee, registration)
-    case event[:event_type]
-    when :service
-      notifications_sent << "EMAIL: #{attendee[:email]} - Registration cancelled for #{event[:name]}"
-    when :workshop
-      notifications_sent << "EMAIL: #{attendee[:email]} - Registration cancelled for #{event[:name]}"
-      notifications_sent << "SMS: #{attendee[:phone]} - Cancelled: #{event[:name]}" if attendee[:phone]
-    when :retreat
-      refund_info = " Refund of $#{registration[:price]} will be processed within 5-7 business days."
-      notifications_sent << "EMAIL: #{attendee[:email]} - Registration cancelled for #{event[:name]}.#{refund_info}"
-      notifications_sent << "SMS: #{attendee[:phone]} - Cancelled: #{event[:name]}" if attendee[:phone]
+    email_message = "Registration cancelled for #{event.name}."
+    email_message += " Refund of $#{registration[:price]} will be processed within 5-7 business days." if is_retreat_event?(event)
+    sms_message = "Cancelled: #{event.name}."
+
+    event.cancellation_notification_formats.each do |format|
+      next if format == :sms && !attendee[:phone]
+
+      contact = format == :email ? attendee[:email] : attendee[:phone]
+      message = format == :sms ? sms_message : email_message
+
+      notifications_sent << "#{format.upcase}: #{contact} - #{message}"
     end
   end
 
@@ -60,5 +63,9 @@ class Notifier
 
   def build_message(format, recipient, content)
      "#{format.to_s.upcase}: #{recipient} - #{content}"
+  end
+
+  def is_retreat_event?(event)
+    event.type == RETREAT_EVENT_TYPE
   end
 end

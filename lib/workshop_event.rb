@@ -15,4 +15,8 @@ class WorkshopEvent < Event
   def waitlist_notification_formats
     [ :email, :sms ]
   end
+
+  def cancellation_notification_formats
+    [ :email, :sms ]
+  end
 end

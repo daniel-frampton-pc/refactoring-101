@@ -105,7 +105,16 @@ class RegistrationSystem
       registration = @registrations[attendee[:email]]&.find { |r| r[:event_name] == event[:name] }
       registration[:status] = :cancelled if registration
 
-      notifier.send_cancellation_notifications(event, attendee, registration)
+      event_obj = case event[:event_type]
+      when :service
+        ServiceEvent.new(event)
+      when :workshop
+        WorkshopEvent.new(event)
+      when :retreat
+        RetreatEvent.new(event)
+      end
+
+      notifier.send_cancellation_notifications(event_obj, attendee, registration)
 
       # Promote from waitlist
       if event[:waitlist].any?

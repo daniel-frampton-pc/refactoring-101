@@ -11,4 +11,8 @@ class ServiceEvent < Event
   def waitlist_notification_formats
     [ :email ]
   end
+
+  def cancellation_notification_formats
+    [ :email ]
+  end
 end
