@@ -41,7 +41,8 @@ require_relative "test_helper"
 
 # NOTE TO OURSELVES:
 # We left off at refactoring Notifier to use polymorphism.
-# Caroline has as an optimistic goal to finish refactoring Notifier.
+# Caroline finished refactoring the methods in Notifier, with tests passing.
+# She would still like to make some changes to DRY up the code before our next session.
 # Next time, we plan to pick up with creating ConferenceEvent.
 
 class OpenClosedTest < Minitest::Test
