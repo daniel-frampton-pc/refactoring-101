@@ -12,7 +12,7 @@ class Notifier
     event.registration_notification_formats.each do |format|
       next if format == :sms && !attendee[:phone]
 
-      contact =format == :email ? attendee[:email] : attendee[:phone]
+      contact = format == :email ? attendee[:email] : attendee[:phone]
       message = format == :sms ? sms_message : email_message
 
       notifications_sent << "#{format.upcase}: #{contact} - #{message}"
@@ -20,10 +20,16 @@ class Notifier
   end
 
   def send_waitlist_notifications(event, attendee)
-    notifications_sent << build_message(:email, attendee[:email], "You're on the waitlist for #{event[:name]}")
+    email_message = "You're on the waitlist for #{event.name}."
+    sms_message = "Waitlisted for #{event.name}."
 
-    if event[:event_type] != :service && attendee[:phone]
-      notifications_sent << build_message(:sms, attendee[:phone], "Waitlisted for #{event[:name]}")
+    event.waitlist_notification_formats.each do |format|
+      next if format == :sms && !attendee[:phone]
+
+      contact = format == :email ? attendee[:email] : attendee[:phone]
+      message = format == :sms ? sms_message : email_message
+
+      notifications_sent << "#{format.upcase}: #{contact} - #{message}"
     end
   end
 

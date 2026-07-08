@@ -12,4 +12,8 @@ class RetreatEvent < Event
   def registration_notification_formats
     [ :email, :sms ]
   end
+
+  def waitlist_notification_formats
+    [ :email, :sms ]
+  end
 end

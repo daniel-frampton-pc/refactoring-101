@@ -7,4 +7,8 @@ class ServiceEvent < Event
   def registration_notification_formats
     [ :email ]
   end
+
+  def waitlist_notification_formats
+    [ :email ]
+  end
 end

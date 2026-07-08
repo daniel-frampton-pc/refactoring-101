@@ -60,17 +60,17 @@ class RegistrationSystem
 
     attendee = { name: attendee_name, email: attendee_email, phone: phone }
 
+    event_obj = case event[:event_type]
+    when :service
+      ServiceEvent.new(event)
+    when :workshop
+      WorkshopEvent.new(event)
+    when :retreat
+      RetreatEvent.new(event)
+    end
+
     if event[:registered].size < event[:capacity]
       event[:registered] << attendee
-
-      event_obj = case event[:event_type]
-      when :service
-        ServiceEvent.new(event)
-      when :workshop
-        WorkshopEvent.new(event)
-      when :retreat
-        RetreatEvent.new(event)
-      end
 
       # Calculate price
       final_price = PriceCalculator.new(event_obj).calculate_price
@@ -85,7 +85,7 @@ class RegistrationSystem
     else
       event[:waitlist] << attendee
 
-      notifier.send_waitlist_notifications(event, attendee)
+      notifier.send_waitlist_notifications(event_obj, attendee)
 
       @registrations[attendee[:email]] ||= []
       @registrations[attendee[:email]] << { event_name: event[:name], price: 0, status: :waitlisted }
