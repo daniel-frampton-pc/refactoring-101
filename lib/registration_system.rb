@@ -60,14 +60,7 @@ class RegistrationSystem
 
     attendee = { name: attendee_name, email: attendee_email, phone: phone }
 
-    event_obj = case event[:event_type]
-    when :service
-      ServiceEvent.new(event)
-    when :workshop
-      WorkshopEvent.new(event)
-    when :retreat
-      RetreatEvent.new(event)
-    end
+    event_obj = get_event_object(event)
 
     if event[:registered].size < event[:capacity]
       event[:registered] << attendee
@@ -100,14 +93,7 @@ class RegistrationSystem
 
     return { success: false, status: nil, price: nil, error: "Registration not found" } unless registered_person || waitlisted_person
 
-    event_obj = case event[:event_type]
-    when :service
-      ServiceEvent.new(event)
-    when :workshop
-      WorkshopEvent.new(event)
-    when :retreat
-      RetreatEvent.new(event)
-    end
+    event_obj = get_event_object(event)
 
     if registered_person
       event[:registered].delete(registered_person)
@@ -135,6 +121,19 @@ class RegistrationSystem
       registration[:status] = :cancelled if registration
       notifier.send_remove_from_waitlist_notification(event_obj, attendee)
       { success: true, status: :cancelled, price: nil, error: nil }
+    end
+  end
+
+  private
+
+  def get_event_object(event)
+    case event[:event_type]
+    when :service
+      ServiceEvent.new(event)
+    when :workshop
+      WorkshopEvent.new(event)
+    when :retreat
+      RetreatEvent.new(event)
     end
   end
 end
