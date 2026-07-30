@@ -36,7 +36,7 @@ class InterfaceSegregationTest < Minitest::Test
   # -- EmailNotifier sends email-formatted notifications ----------------------
 
   def test_email_notifier_sends_registration_notification
-    skip "Split Notifier into focused, single-channel classes"
+    # skip "Split Notifier into focused, single-channel classes"
 
     notifier = EmailNotifier.new
     event = { name: "Workshop" }
@@ -51,7 +51,7 @@ class InterfaceSegregationTest < Minitest::Test
   # -- SmsNotifier sends SMS-formatted notifications --------------------------
 
   def test_sms_notifier_sends_registration_notification
-    skip "Split Notifier into focused, single-channel classes"
+    # skip "Split Notifier into focused, single-channel classes"
 
     notifier = SmsNotifier.new
     event = { name: "Workshop" }
@@ -66,7 +66,7 @@ class InterfaceSegregationTest < Minitest::Test
   # -- SlackNotifier sends Slack-formatted registration notifications ---------
 
   def test_slack_notifier_sends_registration_notification
-    skip "Add a SlackNotifier that sends SLACK: #events - ... messages"
+    # skip "Add a SlackNotifier that sends SLACK: #events - ... messages"
 
     notifier = SlackNotifier.new
     event = { name: "Workshop" }

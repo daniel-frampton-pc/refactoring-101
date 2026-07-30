@@ -7,6 +7,9 @@ require_relative './retreat_event'
 require_relative './workshop_event'
 require_relative './service_event'
 require_relative './conference_event'
+require_relative './email_notifier'
+require_relative './sms_notifier'
+require_relative './slack_notifier'
 
 class RegistrationSystem
   attr_reader :events, :registrations, :notifier
