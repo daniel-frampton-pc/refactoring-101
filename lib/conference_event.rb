@@ -19,4 +19,8 @@ class ConferenceEvent < Event
   def cancellation_notification_formats
     [ :email, :sms ]
   end
+
+  def cancellation_policy
+    "50% refund"
+  end
 end

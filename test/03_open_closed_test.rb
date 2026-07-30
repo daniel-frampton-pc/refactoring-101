@@ -79,7 +79,7 @@ class OpenClosedTest < Minitest::Test
   end
 
   def test_conference_cancellation_policy
-    skip "Add :conference event type -- replace case/when with polymorphism first"
+    # skip "Add :conference event type -- replace case/when with polymorphism first"
 
     system = RegistrationSystem.new
     system.create_event("Tech Conference", :conference, 12, 300, 200)

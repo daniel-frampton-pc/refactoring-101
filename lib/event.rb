@@ -17,4 +17,8 @@ class Event
   def remove_from_waitlist_notification_formats
     [ :email ]
   end
+
+  def cancellation_policy
+    nil
+  end
 end

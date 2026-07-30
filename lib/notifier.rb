@@ -1,8 +1,6 @@
 class Notifier
   attr_accessor :notifications_sent
 
-  RETREAT_EVENT_TYPE = :retreat
-
   def initialize
     @notifications_sent = []
   end
@@ -37,7 +35,8 @@ class Notifier
 
   def send_cancellation_notifications(event, attendee, registration)
     email_message = "Registration cancelled for #{event.name}."
-    email_message += " Refund of $#{registration[:price]} will be processed within 5-7 business days." if is_retreat_event?(event)
+    cancellation_message = event.cancellation_policy
+    email_message += " #{cancellation_message}" if cancellation_message
     sms_message = "Cancelled: #{event.name}."
 
     event.cancellation_notification_formats.each do |format|
@@ -79,9 +78,5 @@ class Notifier
 
   def build_message(format, recipient, content)
      "#{format.to_s.upcase}: #{recipient} - #{content}"
-  end
-
-  def is_retreat_event?(event)
-    event.type == RETREAT_EVENT_TYPE
   end
 end

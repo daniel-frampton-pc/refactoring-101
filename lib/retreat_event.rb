@@ -20,4 +20,8 @@ class RetreatEvent < Event
   def cancellation_notification_formats
     [ :email, :sms ]
   end
+
+  def cancellation_policy
+    "Refund of $#{calculate_price} will be processed within 5-7 business days."
+  end
 end
