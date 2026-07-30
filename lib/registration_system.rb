@@ -6,6 +6,8 @@ require_relative './report_generator.rb'
 require_relative './retreat_event'
 require_relative './workshop_event'
 require_relative './service_event'
+require_relative './conference_event'
+
 class RegistrationSystem
   attr_reader :events, :registrations, :notifier
   extend Forwardable
@@ -134,6 +136,10 @@ class RegistrationSystem
       WorkshopEvent.new(event)
     when :retreat
       RetreatEvent.new(event)
+    when :conference
+      ConferenceEvent.new(event)
+    else
+      raise "Error: unknown event type"
     end
   end
 end

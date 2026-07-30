@@ -39,15 +39,10 @@ require_relative "test_helper"
 #
 # =============================================================================
 
-# NOTE TO OURSELVES:
-# We left off at refactoring Notifier to use polymorphism.
-# Caroline finished refactoring the methods in Notifier, with tests passing.
-# She would still like to make some changes to DRY up the code before our next session.
-# Next time, we plan to pick up with creating ConferenceEvent.
 
 class OpenClosedTest < Minitest::Test
   def test_conference_registration_with_early_bird_pricing
-    skip "Add :conference event type -- replace case/when with polymorphism first"
+    # skip "Add :conference event type -- replace case/when with polymorphism first"
 
     system = RegistrationSystem.new
     system.create_event("Tech Conference", :conference, 12, 300, 200)
@@ -58,7 +53,7 @@ class OpenClosedTest < Minitest::Test
   end
 
   def test_conference_registration_regular_pricing
-    skip "Add :conference event type -- replace case/when with polymorphism first"
+    # skip "Add :conference event type -- replace case/when with polymorphism first"
 
     system = RegistrationSystem.new
     system.create_event("Tech Conference", :conference, 12, 300, 200)
@@ -72,7 +67,7 @@ class OpenClosedTest < Minitest::Test
   end
 
   def test_conference_sends_email_and_sms
-    skip "Add :conference event type -- replace case/when with polymorphism first"
+    # skip "Add :conference event type -- replace case/when with polymorphism first"
 
     system = RegistrationSystem.new
     system.create_event("Tech Conference", :conference, 12, 300, 200)
@@ -100,7 +95,7 @@ class OpenClosedTest < Minitest::Test
   end
 
   def test_existing_event_types_still_work
-    skip "Add :conference event type -- replace case/when with polymorphism first"
+    # skip "Add :conference event type -- replace case/when with polymorphism first"
 
     system = RegistrationSystem.new
     system.create_event("Workshop", :workshop, 10, 50, 35)
