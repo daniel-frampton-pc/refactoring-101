@@ -31,7 +31,7 @@ class LiskovSubstitutionTest < Minitest::Test
   # -- ServiceEvent works through the same generic path as every other type ---
 
   def test_service_event_registration_works_generically
-    skip "Fix ServiceEvent so registration dispatches based on channels -- no nil guards"
+    # skip "Fix ServiceEvent so registration dispatches based on channels -- no nil guards"
 
     @system.create_event("Sunday Service", :service, 100, 0)
 
@@ -44,7 +44,7 @@ class LiskovSubstitutionTest < Minitest::Test
   # -- Every event type produces the right notification count -----------------
 
   def test_all_event_types_produce_correct_notification_counts
-    skip "All event types dispatch through the same code path based on channels"
+    # skip "All event types dispatch through the same code path based on channels"
 
     @system.create_event("Service", :service, 100, 0)
     @system.create_event("Workshop", :workshop, 20, 50)
@@ -67,7 +67,7 @@ class LiskovSubstitutionTest < Minitest::Test
   # -- ServiceEvent cancellation works without rescuing errors ----------------
 
   def test_service_event_cancellation_works_generically
-    skip "Fix ServiceEvent#cancellation_policy so cancellation works without rescue"
+    # skip "Fix ServiceEvent#cancellation_policy so cancellation works without rescue"
 
     @system.create_event("Sunday Service", :service, 100, 0)
     @system.register("Alice", "alice@example.com", "Sunday Service")
@@ -84,7 +84,7 @@ class LiskovSubstitutionTest < Minitest::Test
   # -- Cancel-and-promote works generically for every event type --------------
 
   def test_cancel_and_promote_works_for_all_event_types
-    skip "The entire cancel-and-promote flow works generically for all event types"
+    # skip "The entire cancel-and-promote flow works generically for all event types"
 
     %i[service workshop retreat].each do |type|
       system = RegistrationSystem.new
