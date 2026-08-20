@@ -1,3 +1,7 @@
+require './lib/email_notifier.rb'
+require './lib/sms_notifier.rb'
+require './lib/slack_notifier.rb'
+
 class Notifier
   attr_accessor :notifications_sent
 
@@ -5,17 +9,20 @@ class Notifier
     @notifications_sent = []
   end
 
-  def send_registration_notifications(event, attendee, final_price)
-    email_message = "Registration confirmed for #{event.name}. Amount: $#{final_price}"
-    sms_message = "You're registered for #{event.name}!"
+  FORMAT_TO_NOTIFIER_CLASS = {
+    email: EmailNotifier.new,
+    sms: SmsNotifier.new,
+    slack: SlackNotifier.new
+  }.freeze
 
+  def send_registration_notifications(event, attendee, final_price)
     event.registration_notification_formats.each do |format|
       next if format == :sms && !attendee[:phone]
 
-      contact = format == :email ? attendee[:email] : attendee[:phone]
-      message = format == :sms ? sms_message : email_message
+      notifier = FORMAT_TO_NOTIFIER_CLASS[format]
+      sent = notifier.send_registration({name: event.name}, attendee, final_price)
 
-      notifications_sent << "#{format.upcase}: #{contact} - #{message}"
+      notifications_sent << sent
     end
   end
 

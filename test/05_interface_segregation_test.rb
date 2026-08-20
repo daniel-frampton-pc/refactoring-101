@@ -101,7 +101,7 @@ class InterfaceSegregationTest < Minitest::Test
   # -- Full system: conference with Slack produces all three channels ----------
 
   def test_conference_registration_sends_email_sms_and_slack
-    skip "Wire SlackNotifier into the system -- conference events use all three channels"
+    # skip "Wire SlackNotifier into the system -- conference events use all three channels"
 
     system = RegistrationSystem.new
     system.create_event("Tech Conference", :conference, 12, 300, 200)
