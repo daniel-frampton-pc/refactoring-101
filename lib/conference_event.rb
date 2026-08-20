@@ -9,15 +9,15 @@ class ConferenceEvent < Event
   end
 
   def registration_notification_formats
-    [ :email, :sms ]
+    [ :email, :sms, :slack ]
   end
 
   def waitlist_notification_formats
-    [ :email, :sms ]
+    [ :email, :sms, :slack ]
   end
 
   def cancellation_notification_formats
-    [ :email, :sms ]
+    [ :email, :sms, :slack ]
   end
 
   def cancellation_policy
