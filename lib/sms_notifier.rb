@@ -6,22 +6,26 @@ class SmsNotifier
   end
 
   def send_registration(event, attendee, _final_price)
-    message = "You're registered for #{event[:name]}!"
-    notifications << "SMS: #{attendee[:phone]} - #{message}"
+    full_msg = "SMS: #{attendee[:phone]} - You're registered for #{event[:name]}!"
+    notifications << full_msg
+    full_msg
   end
 
   def send_waitlist(event, attendee)
-    message = "Waitlisted for #{event[:name]}."
-    notifications << "SMS: #{attendee[:phone]} - #{message}"
+    full_msg = "SMS: #{attendee[:phone]} - Waitlisted for #{event[:name]}."
+    notifications << full_msg
+    full_msg
   end
 
   def send_cancellation(event, attendee, cancellation_message)
-    message = "Cancelled: #{event[:name]}."
-    notifications << "SMS: #{attendee[:phone]} - #{message}"
+    full_msg = "SMS: #{attendee[:phone]} - Cancelled: #{event[:name]}."
+    notifications << full_msg
+    full_msg
   end
 
   def send_promotion(event, attendee, price)
-    message = "Promoted from waitlist: #{event[:name]}!"
-    notifications << "SMS: #{attendee[:phone]} - #{message}"
+    full_msg = "SMS: #{attendee[:phone]} - Promoted from waitlist: #{event[:name]}!"
+    notifications << full_msg
+    full_msg
   end
 end
