@@ -81,7 +81,7 @@ class InterfaceSegregationTest < Minitest::Test
   # -- SlackNotifier produces no email or SMS ---------------------------------
 
   def test_slack_notifier_produces_no_email_or_sms
-    skip "SlackNotifier produces only SLACK: messages, never EMAIL: or SMS:"
+    # skip "SlackNotifier produces only SLACK: messages, never EMAIL: or SMS:"
 
     notifier = SlackNotifier.new
     event = { name: "Workshop" }
